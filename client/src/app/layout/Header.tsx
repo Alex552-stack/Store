@@ -1,5 +1,4 @@
 import { AppBar, Switch, Toolbar, Typography } from "@mui/material";
-import { ChangeEvent } from "react";
 
 interface Props{
     switchDarkMode: () => void;

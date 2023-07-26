@@ -11,7 +11,10 @@ function App() {
   const palletteType = darkMode ? 'dark' : 'light';
   const theme = createTheme({
     palette:{
-      mode: palletteType
+      mode: palletteType,
+      background:{
+        default:palletteType === 'light' ? '#eaeaea' : '#121212'
+      }
     }
   })
   function SwitchDarkMode(){
