@@ -63,7 +63,7 @@ namespace API.Controllers
             //save
             if(result) return Ok();
 
-            return BadRequest(new ProblemDetails { Title = "Item not fouond in the basket" });
+            return BadRequest(new ProblemDetails { Title = "Item not found in the basket" });
         }
 
         private async Task<Basket> RetrieveBasket()
