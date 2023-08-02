@@ -26,7 +26,10 @@ namespace API.Controllers
             .Filter(productParams.Brands, productParams.Types)
             .AsQueryable();
 
+            
             var products = await PagedList<Product>.ToPagesList(query, productParams.PageNumber, productParams.PageSize);
+
+            //products.MetaData.CurrentPage = (products.MetaData.CurrentPage > products.MetaData.TotalPages) ? 1 : products.MetaData.CurrentPage;
 
             Response.AddPaginationHeader(products.MetaData);
 
@@ -48,7 +51,7 @@ namespace API.Controllers
             var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
             var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
 
-            return Ok(new {brands, types});
+            return Ok(new { brands, types });
         }
 
     }
