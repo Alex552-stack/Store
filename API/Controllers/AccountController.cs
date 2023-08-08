@@ -37,7 +37,7 @@ namespace API.Controllers
 
             if (anonbasket != null)
             {
-                if(userBasket != null) _context.Baskets.Remove(userBasket);
+                if (userBasket != null) _context.Baskets.Remove(userBasket);
                 anonbasket.BuyerId = user.UserName;
                 Response.Cookies.Delete("buyerId");
                 await _context.SaveChangesAsync();
@@ -86,6 +86,16 @@ namespace API.Controllers
                 Token = await _tokenService.GenerateToken(user),
                 Basket = userBasket?.MapBasketToDto()
             };
+        }
+
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSavedAddress()
+        {
+            return await _userManager.Users
+                .Where(x => x.UserName == User.Identity.Name)
+                .Select(user => user.Address)
+                .FirstOrDefaultAsync();
         }
 
         private async Task<Basket> RetrieveBasket(string buyerId)
