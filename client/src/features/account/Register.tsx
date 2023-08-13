@@ -1,6 +1,6 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { LoadingButton } from '@mui/lab';
-import { Alert, AlertTitle, List, ListItem, ListItemText, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -10,18 +10,14 @@ import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import agent from '../../app/api/agent';
-import { useAppDispatch } from '../../app/store/configureStore';
-import { useState } from 'react';
-import { Pattern } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import agent from '../../app/api/agent';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 export default function Register() {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const { register, handleSubmit, setError, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'all'
     })

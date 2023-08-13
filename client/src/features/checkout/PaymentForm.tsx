@@ -1,9 +1,9 @@
-import { Typography, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
+import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
+import { StripeElementType } from "@stripe/stripe-js";
 import { useFormContext } from "react-hook-form";
 import AppTextInput from "../../app/components/AppTextInput";
-import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
 import { StripeInput } from "./StripeInput";
-import { StripeElementType } from "@stripe/stripe-js";
 
 interface Props{
   cardState: { elementError: { [key in StripeElementType]?: string } }

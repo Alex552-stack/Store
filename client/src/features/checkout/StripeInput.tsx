@@ -1,5 +1,5 @@
 import { InputBaseComponentProps } from "@mui/material";
-import { Component, Ref, forwardRef, useImperativeHandle, useRef } from "react";
+import { Ref, forwardRef, useImperativeHandle, useRef } from "react";
 
 interface Props extends InputBaseComponentProps {}
 

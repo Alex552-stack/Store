@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for restore43221 on 2023-08-13T10:32:32+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "restore43221"
+primary_region = "otp"
+
+[build]
+  image = "alexavram3214/restore:latest"
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  StripeSettings__PublishableKey="pk_test_51NcqHHF4OxSnGZxFYcCK86WKSg7G7mEKkTMHEj0RmhbXDOjK7DHOA6XKDOx5l8W260ZLv8pduRHvPUgaLI71p02z00Z3MPrzib"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
