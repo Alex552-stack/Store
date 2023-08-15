@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "../../app/store/configureStore";
 import BasketSummary from "./BasketSummary";
 import BasketTable from "./basketTable";
+import { LoadingButton } from "@mui/lab";
 
 export default function BasketPage() {
     const { basket} = useAppSelector(state => state.basket);
@@ -19,6 +20,7 @@ export default function BasketPage() {
                 <Grid item xs={6}>
                     <BasketSummary/>
                     <Button
+                        disabled = {!(basket.items.length > 0)}
                         component = {Link}
                         to = '/checkout'
                         variant = 'contained'
