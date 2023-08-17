@@ -136,7 +136,7 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null) 
+            if (user == null)
             {
                 return NotFound("User not found.");
             }
@@ -147,8 +147,16 @@ namespace API.Controllers
             {
                 user.EmailConfirmed = true;
                 await _context.SaveChangesAsync();
-                var request = HttpContext.Request;
-                var redirectUrl = $"{request.Scheme}://{request.Host}/checkemail/1";
+                string redirectUrl;
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    var request = HttpContext.Request;
+                    redirectUrl = $"{request.Scheme}://{request.Host}/checkemail/1";
+                }
+                else
+                {
+                    redirectUrl = "https://restore43221.fly.dev/checkemail";
+                }
                 return Redirect(redirectUrl);
             }
             else
