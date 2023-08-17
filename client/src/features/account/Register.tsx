@@ -46,11 +46,11 @@ export default function Register() {
                 Register
             </Typography>
             <Box component="form" onSubmit={handleSubmit(data => agent.Account.register(data)
-            .then(() => {
-                toast.success('Registration succesfull - you can nou log in')
-                navigate('/login')
-            })
-            .catch(error => handleApiErrors(error)))} noValidate sx={{ mt: 1 }}>
+                .then(() => {
+                    toast.success('Registration succesfull - check your email now')
+                    navigate('/login')
+                })
+                .catch(error => handleApiErrors(error)))} noValidate sx={{ mt: 1 }}>
                 <TextField
                     margin="normal"
                     fullWidth
@@ -66,7 +66,7 @@ export default function Register() {
                     fullWidth
                     label="Email"
                     type="email"
-                    {...register('email', { 
+                    {...register('email', {
                         required: 'email is required',
                         pattern: {
                             value: /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/,
@@ -81,9 +81,9 @@ export default function Register() {
                     fullWidth
                     label="Password"
                     type="password"
-                    {...register('password', { 
-                        required: 'Password is required', 
-                        pattern:{
+                    {...register('password', {
+                        required: 'Password is required',
+                        pattern: {
                             value: /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
                             message: 'password does not meet complexity requirements'
                         }

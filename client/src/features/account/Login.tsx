@@ -10,8 +10,9 @@ import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../app/store/configureStore';
+import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
 import { signInUser } from './accountSlice';
+import { toast } from 'react-toastify';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -21,6 +22,7 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const user = useAppSelector(state => state.account);
     const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'onTouched'
     })

@@ -13,6 +13,7 @@ import ServerError from "../errors/ServerError";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
 import Inventory from "../../features/admin/Inventory";
+import CheckEmail from "../../features/account/ConfirmedEmail";
 
 export const router = createBrowserRouter(
     [
@@ -42,6 +43,7 @@ export const router = createBrowserRouter(
                 { path: 'basket', element: <BasketPage /> },
                 { path: 'login', element: <Login /> },
                 { path: 'register', element: <Register /> },
+                { path: 'checkemail', element: <CheckEmail /> },
                 { path: '*', element: <Navigate replace to='/not-found' /> }
             ]
         }
