@@ -6,8 +6,9 @@ using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-
+using SendGrid;
 
 namespace API.Controllers
 {
@@ -15,10 +16,16 @@ namespace API.Controllers
     {
         private readonly TokenService _tokenService;
         private readonly StoreContext _context;
+        private readonly EmailService _emailService;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         private readonly UserManager<User> _userManager;
-        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext context)
+        public AccountController(IWebHostEnvironment webHostEnvironment, IConfiguration configuration, UserManager<User> userManager, TokenService tokenService, StoreContext context, EmailService emailService)
         {
+            _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
+            _emailService = emailService;
             _context = context;
             _tokenService = tokenService;
             _userManager = userManager;
@@ -48,14 +55,19 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user),
-                Basket = anonbasket != null ? anonbasket.MapBasketToDto() : userBasket?.MapBasketToDto()
+                Basket = anonbasket != null ? anonbasket.MapBasketToDto() : userBasket?.MapBasketToDto(),
+                EmailConfirmed = user.EmailConfirmed
             };
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
-            var user = new User { UserName = registerDto.Username, Email = registerDto.Email };
+            var user = new User
+            {
+                UserName = registerDto.Username,
+                Email = registerDto.Email
+            };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
@@ -67,8 +79,15 @@ namespace API.Controllers
 
                 return ValidationProblem();
             }
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token }, protocol: HttpContext.Request.Scheme);
+
 
             await _userManager.AddToRoleAsync(user, "Member");
+
+            var message = $"Your verification link is {confirmationLink}";
+
+            await _emailService.SendEmailAsync(user.Email, "Email confirmation", message);
 
             return StatusCode(201);
         }
@@ -84,7 +103,8 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user),
-                Basket = userBasket?.MapBasketToDto()
+                Basket = userBasket?.MapBasketToDto(),
+                EmailConfirmed = user.EmailConfirmed
             };
         }
 
@@ -111,6 +131,31 @@ namespace API.Controllers
                         .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
         }
 
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) 
+            {
+                return NotFound("User not found.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                user.EmailConfirmed = true;
+                await _context.SaveChangesAsync();
+                var request = HttpContext.Request;
+                var redirectUrl = $"{request.Scheme}://{request.Host}/checkemail/1";
+                return Redirect(redirectUrl);
+            }
+            else
+            {
+                return BadRequest("Email confirmation failed.");
+            }
+        }
 
     }
 }

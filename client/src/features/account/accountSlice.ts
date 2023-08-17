@@ -22,6 +22,7 @@ export const signInUser = createAsyncThunk<User,FieldValues>(
             const {basket, ...user} = userDto;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user', JSON.stringify(user));
+            if(!user.emailConfirmed) toast.warning("Your email is not confirmed");
             return user;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data })
@@ -38,6 +39,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
             const {basket, ...user} = userDto;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user', JSON.stringify(user));
+            if(!user.emailConfirmed) toast.warning("Your email is not confirmed");
             return user;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data })
